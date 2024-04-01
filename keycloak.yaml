@@ -22,26 +22,24 @@ spec:
               # remote infinispan cache
             - name: KC_CACHE
               value: ispn
-            # - name: KC_CACHE_REMOTE_HOST
-            #   value: infinispan
-            # - name: KC_CACHE_REMOTE_USERNAME
-            #   value: admin
-            # - name: KC_CACHE_REMOTE_PASSWORD
-            #   value: password
+            - name: KEYCLOAK_CACHE_REMOTE_HOST
+              value: infinispan
+            - name: KEYCLOAK_CACHE_REMOTE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: infinispan-credentials
+                  key: username
+            - name: KEYCLOAK_CACHE_REMOTE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: infinispan-credentials
+                  key: password
             - name: KC_CACHE_STACK
               value: kubernetes
             - name: JAVA_OPTS_APPEND
               value: "-Djgroups.dns.query=infinispan.default.svc.cluster.local"
-            - name: KC_REMOTE_STORE_HOST
-              value: infinispan
-            # - name: KC_REMOTE_STORE_PORT
-            #   value: "11222"
-            # - name: KC_REMOTE_STORE_USERNAME
-            #   value: admin
-            # - name: KC_REMOTE_STORE_PASSWORD
-            #   value: password
 
-              # keycloak credentials
+            # keycloak credentials
             - name: KEYCLOAK_ADMIN
               valueFrom:
                 secretKeyRef:

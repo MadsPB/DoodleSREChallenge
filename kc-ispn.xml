@@ -43,10 +43,10 @@
       <distributed-cache name="sessions" owners="1">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="sessions" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -56,10 +56,10 @@
       <distributed-cache name="authenticationSessions" owners="1">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="authenticationSessions" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -69,10 +69,10 @@
       <distributed-cache name="offlineSessions" owners="1">
         <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="offlineSessions" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
               <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -82,10 +82,10 @@
       <distributed-cache name="clientSessions" owners="1">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="clientSessions" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -95,10 +95,10 @@
       <distributed-cache name="offlineClientSessions" owners="1">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="offlineClientSessions" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -108,10 +108,10 @@
       <distributed-cache name="loginFailures" owners="1">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="loginFailures" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -122,10 +122,10 @@
          <expiration max-idle="-1" interval="300000" />
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="actionTokens" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
@@ -135,10 +135,10 @@
       <replicated-cache name="work">
          <persistence passivation="false">
             <remote-store xmlns="urn:infinispan:config:store:remote:14.0" cache="work" purge="false" preload="false" segmented="false" shared="true" raw-values="true" >
-                <remote-server host="infinispan" port="11222" />
+                <remote-server host="${env.KEYCLOAK_CACHE_REMOTE_HOST}" port="11222" />
                 <security>
-                   <authentication server-name="infinispan">
-                      <digest username="admin" password="password" realm="default" />
+                   <authentication server-name="${env.KEYCLOAK_CACHE_REMOTE_HOST}">
+                      <digest username="${env.KEYCLOAK_CACHE_REMOTE_USERNAME}" password="${env.KEYCLOAK_CACHE_REMOTE_PASSWORD}" realm="default" />
                    </authentication>
                 </security>
                  <!-- <property name="marshaller">org.keycloak.cluster.infinispan.KeycloakHotRodMarshallerFactory</property> -->
