@@ -1,3 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: infinispan
+  labels:
+    app: infinispan
+spec:
+  ports:
+    - name: http
+      port: 11222
+      targetPort: 11222
+    - name: infini-jgroup
+      port: 7800
+      targetPort: 7800
+  selector:
+    app: infinispan
+  type: LoadBalancer
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,22 +70,3 @@ spec:
         - name: infinispan-cache-volume
           configMap:
             name: infinispan-cache-config
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: infinispan
-  labels:
-    app: infinispan
-spec:
-  ports:
-    - name: http
-      port: 11222
-      targetPort: 11222
-    - name: infini-jgroup
-      port: 7800
-      targetPort: 7800
-  selector:
-    app: infinispan
-  type: LoadBalancer
