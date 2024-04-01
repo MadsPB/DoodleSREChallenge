@@ -1,0 +1,54 @@
+apiVersion: v1
+data:
+  infinispan.xml: "<infinispan\n      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n
+    \     xsi:schemaLocation=\"urn:infinispan:config:14.0 https://infinispan.org/schemas/infinispan-config-14.0.xsd\n
+    \                           urn:infinispan:server:14.0 https://infinispan.org/schemas/infinispan-server-14.0.xsd\"\n
+    \     xmlns=\"urn:infinispan:config:14.0\"\n      xmlns:server=\"urn:infinispan:server:14.0\">\n\n
+    \    <cache-container name=\"default\" statistics=\"true\">\n      <!-- <transport
+    cluster=\"${infinispan.cluster.name:cluster}\" stack=\"${infinispan.cluster.stack:tcp}\"
+    node-name=\"${infinispan.node.name:}\"/>\n      <security>\n         <authorization/>\n
+    \     </security> -->\n\n      <!-- added transport kubernetes-->\n      <transport
+    cluster=\"kubernetes\">\n\n            <properties>\n                <property
+    name=\"configurationFile\" value=\"default-configs/default-jgroups-kubernetes.xml\"/>\n
+    \           </properties>\n        </transport>\n\n\n        <!-- <serialization
+    marshaller=\"org.infinispan.jboss.marshalling.commons.GenericJBossMarshaller\">\n
+    \           <allow-list>\n                <class>org.*</class>\n                <regex>.*</regex>\n
+    \           </allow-list>\n        </serialization> -->\n\n         <!-- Replicated
+    cache -->\n        <replicated-cache name=\"work\">\n            <!-- <encoding
+    media-type=\"application/x-jboss-marshalling\" /> -->\n        </replicated-cache>\n\n
+    \        <!-- Distributed caches -->\n        <distributed-cache name=\"sessions\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"authenticationSessions\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"clientSessions\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"offlineSessions\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"offlineClientSessions\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"actionTokens\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n\n        <distributed-cache name=\"loginFailures\">\n
+    \           <!-- <encoding media-type=\"application/x-jboss-marshalling\" /> -->\n
+    \       </distributed-cache>\n   </cache-container>\n\n   <server xmlns=\"urn:infinispan:server:14.0\">\n
+    \     <interfaces>\n         <interface name=\"public\">\n            <inet-address
+    value=\"${infinispan.bind.address:127.0.0.1}\"/>\n         </interface>\n      </interfaces>\n\n
+    \     <socket-bindings default-interface=\"public\" port-offset=\"${infinispan.socket.binding.port-offset:0}\">\n
+    \        <socket-binding name=\"default\" port=\"${infinispan.bind.port:11222}\"/>\n
+    \        <socket-binding name=\"memcached\" port=\"11221\"/>\n      </socket-bindings>\n\n
+    \     <security>\n         <credential-stores>\n            <credential-store
+    name=\"credentials\" path=\"credentials.pfx\">\n               <clear-text-credential
+    clear-text=\"secret\"/>\n            </credential-store>\n         </credential-stores>\n
+    \        <security-realms>\n            <security-realm name=\"default\">\n               <!--
+    Uncomment to enable TLS on the realm -->\n               <!-- server-identities>\n
+    \                 <ssl>\n                     <keystore path=\"application.keystore\"\n
+    \                              password=\"password\" alias=\"server\"\n                               generate-self-signed-certificate-host=\"localhost\"/>\n
+    \                 </ssl>\n               </server-identities-->\n               <properties-realm
+    groups-attribute=\"Roles\">\n                  <user-properties path=\"users.properties\"/>\n
+    \                 <group-properties path=\"groups.properties\"/>\n               </properties-realm>\n
+    \           </security-realm>\n         </security-realms>\n      </security>\n\n
+    \     <endpoints socket-binding=\"default\" security-realm=\"default\" /> \n   </server>\n</infinispan>\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: infinispan-cache-config

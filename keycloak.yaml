@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak
+          args: ["start-dev", "--cache-config-file=cache-ispn.xml", "--spi-connections-infinispan-quarkus-site-name='keycloak'"]
+          env:
+              # remote infinispan cache
+            - name: KC_CACHE
+              value: ispn
+            # - name: KC_CACHE_REMOTE_HOST
+            #   value: infinispan
+            # - name: KC_CACHE_REMOTE_USERNAME
+            #   value: admin
+            # - name: KC_CACHE_REMOTE_PASSWORD
+            #   value: password
+            - name: KC_CACHE_STACK
+              value: kubernetes
+            - name: JAVA_OPTS_APPEND
+              value: "-Djgroups.dns.query=infinispan.default.svc.cluster.local"
+            - name: KC_REMOTE_STORE_HOST
+              value: infinispan
+            # - name: KC_REMOTE_STORE_PORT
+            #   value: "11222"
+            # - name: KC_REMOTE_STORE_USERNAME
+            #   value: admin
+            # - name: KC_REMOTE_STORE_PASSWORD
+            #   value: password
+
+              # keycloak credentials
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: username
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credentials
+                  key: password
+            # - name: KC_PROXY
+            #   value: "edge"
+              # keycloak database options
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              value: postgres
+            - name: KC_DB_URL_DATABASE
+              value: keycloak_db
+            - name: KC_DB_USERNAME
+              valueFrom:
+                  secretKeyRef:
+                    name: postgres-credentials
+                    key: username
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+          volumeMounts:
+            - name: "keycloak-config-volume"
+              mountPath: "/opt/keycloak/conf/cache-ispn.xml"
+              subPath: "kc-ispn.xml"
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: kc-infinispan
+              containerPort: 11222
+            - name: infini-jgroup
+              containerPort: 7800
+          readinessProbe:
+            httpGet:
+              path: /realms/master
+              port: 8080
+          resources:
+            requests:
+              cpu: "300m"  # 100 milliCPU (0.1 CPU)
+              memory: "128Mi"  # 128 Mebibytes
+            limits:
+              cpu: "500m"  # 200 milliCPU (0.2 CPU)
+              memory: "512Mi"  # 256 Mebibytes
+      volumes:
+        - name: keycloak-config-volume
+          configMap:
+            name: keycloak-cache-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: keycloak
+  type: LoadBalancer

@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infinispan
+  labels:
+    app: infinispan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infinispan
+  template:
+    metadata:
+      labels:
+        app: infinispan
+    spec:
+      containers:
+        - name: infinispan
+          image: quay.io/infinispan/server:14.0
+          # image: infinispan-local
+          # imagePullPolicy: Never
+          env:
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: infinispan-credentials
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: infinispan-credentials
+                  key: password
+            - name: JAVA_OPTIONS
+              value: "-Dinfinispan.cluster.stack=kubernetes -Djgroups.dns.query=infinispan.default.svc.cluster.local -Dinfinispan.cluster.name=ISPN"
+          ports:
+            - containerPort: 11222
+            - containerPort: 7800
+          resources:
+            requests:
+              cpu: "100m"  # 100 milliCPU (0.1 CPU)
+              memory: "128Mi"  # 128 Mebibytes
+            limits:
+              cpu: "200m"  # 200 milliCPU (0.2 CPU)
+              memory: "512Mi"  # 256 Mebibytes
+          volumeMounts:
+            - name: infinispan-cache-volume
+              mountPath: "/opt/infinispan/server/conf/infinispan.xml"
+              subPath: "infinispan.xml"
+      volumes:
+        - name: infinispan-cache-volume
+          configMap:
+            name: infinispan-cache-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infinispan
+  labels:
+    app: infinispan
+spec:
+  ports:
+    - name: http
+      port: 11222
+      targetPort: 11222
+    - name: infini-jgroup
+      port: 7800
+      targetPort: 7800
+  selector:
+    app: infinispan
+  type: LoadBalancer
