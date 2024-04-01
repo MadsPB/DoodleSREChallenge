@@ -19,7 +19,7 @@ spec:
   persistentVolumeReclaimPolicy: Delete
   storageClassName: local-storage
   hostPath:
-    path: "/mnt/data/"
+    path: "/Users/mads/KeycloakData"
   nodeAffinity:
     required:
       nodeSelectorTerms:
