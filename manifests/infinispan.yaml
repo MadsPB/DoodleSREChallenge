@@ -61,7 +61,7 @@ spec:
               memory: "128Mi"  # 128 Mebibytes
             limits:
               cpu: "200m"  # 200 milliCPU (0.2 CPU)
-              memory: "512Mi"  # 256 Mebibytes
+              memory: "512Mi"  # 512 Mebibytes
           volumeMounts:
             - name: infinispan-cache-volume
               mountPath: "/opt/infinispan/server/conf/infinispan.xml"

@@ -36,9 +36,17 @@ spec:
           image: quay.io/keycloak/keycloak
           args: ["start-dev", "--cache-config-file=cache-ispn.xml", "--spi-connections-infinispan-quarkus-site-name='keycloak'"]
           env:
-              # remote infinispan cache
+              # Turn on infinispan remote cache and service discovery in developer mode
             - name: KC_CACHE
               value: ispn
+              # Set the transport layer stack to kubernetes
+            - name: KC_CACHE_STACK
+              value: kubernetes
+              # set the dns.query to target the service name infinispan, to allow service discovery
+            - name: JAVA_OPTS_APPEND
+              value: "-Djgroups.dns.query=infinispan.default.svc.cluster.local"
+
+              # Variables used to set the target server and authentication for remote cache stores
             - name: KEYCLOAK_CACHE_REMOTE_HOST
               value: infinispan
             - name: KEYCLOAK_CACHE_REMOTE_USERNAME
@@ -51,10 +59,7 @@ spec:
                 secretKeyRef:
                   name: infinispan-credentials
                   key: password
-            - name: KC_CACHE_STACK
-              value: kubernetes
-            - name: JAVA_OPTS_APPEND
-              value: "-Djgroups.dns.query=infinispan.default.svc.cluster.local"
+  
 
             # keycloak credentials
             - name: KEYCLOAK_ADMIN
@@ -67,9 +72,8 @@ spec:
                 secretKeyRef:
                   name: keycloak-credentials
                   key: password
-            # - name: KC_PROXY
-            #   value: "edge"
-              # keycloak database options
+            
+              # keycloak database variables
             - name: KC_DB
               value: postgres
             - name: KC_DB_URL_HOST
@@ -103,11 +107,11 @@ spec:
               port: 8080
           resources:
             requests:
-              cpu: "300m"  # 100 milliCPU (0.1 CPU)
+              cpu: "300m"  # 300 milliCPU (0.3 CPU)
               memory: "128Mi"  # 128 Mebibytes
             limits:
-              cpu: "500m"  # 200 milliCPU (0.2 CPU)
-              memory: "512Mi"  # 256 Mebibytes
+              cpu: "500m"  # 500 milliCPU (0.5 CPU)
+              memory: "512Mi"  # 512 Mebibytes
       volumes:
         - name: keycloak-config-volume
           configMap:
